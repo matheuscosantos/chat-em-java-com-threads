@@ -5,7 +5,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
 import java.io.BufferedWriter;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.net.Socket;
 import javax.swing.*;
@@ -37,9 +36,9 @@ public class Cliente extends JFrame implements ActionListener, KeyListener{
         pnlContent = new JPanel();
         texto = new JTextArea(10,20);
         texto.setEditable(false);
-        texto.setBackground(new Color(240,240,240));
+        texto.setBackground(new Color(240,220,240));
         txtMsg = new JTextField(20);
-        lblHistorico = new JLabel("Histórico");
+        lblHistorico = new JLabel("Historico");
         lblMsg = new JLabel("Mensagem");
         btnSend = new JButton("Enviar");
         btnSend.setToolTipText("Enviar Mensagem");
@@ -59,7 +58,6 @@ public class Cliente extends JFrame implements ActionListener, KeyListener{
         pnlContent.add(btnSend);
         pnlContent.setBackground(Color.LIGHT_GRAY);
         texto.setBorder(BorderFactory.createEtchedBorder(Color.BLUE, Color.BLUE));
-        //txtMsg.setBorder(BorderFactory.createEmptyBorder(Color.BLUE, Color.BLUE));
         setContentPane(pnlContent);
         setLocationRelativeTo(null);
         setResizable(false);
@@ -82,8 +80,11 @@ public class Cliente extends JFrame implements ActionListener, KeyListener{
             bfw.write("Desconectado \r\n");
             texto.append("Desconectado \r\n");
         }else{
-            bfw.write(msg+"\r\n");
-            texto.append(txtNome.getText() +  " diz -> " + txtMsg.getText()+"\r\n");
+            ///COLOCAR AQUI!!!!!!!!!!!!!!!!
+            JCriptoCesar criptoCesar = new JCriptoCesar();
+            String criptografada = criptoCesar.encriptar(12345,msg);
+            bfw.write(criptografada+"\r\n");
+            texto.append(txtMsg.getText()+"\r\n");
         }
         bfw.flush();
         txtMsg.setText("");
@@ -101,7 +102,11 @@ public class Cliente extends JFrame implements ActionListener, KeyListener{
                 if(msg.equals("Sair")){
                     texto.append("Servidor caiu! \r\n");
                 }else{
-                    texto.append(msg+"\r\n");
+                    //colocar o gson aqui
+                    JCriptoCesar criptoCesar = new JCriptoCesar();
+                    String descriptografada;
+                    descriptografada = criptoCesar.decriptar(12345,msg);
+                    texto.append(txtNome.getText() +" diz --> "+descriptografada+"\r\n");
                 }
             }
         }
